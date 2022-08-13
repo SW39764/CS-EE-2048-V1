@@ -3,6 +3,8 @@
 import random
 from copy import deepcopy
 
+import numpy as np
+
 import gym
 from gym import Env
 from gym.spaces import Discrete, Box
@@ -188,7 +190,7 @@ class MyGameEnv(Env):
         global board
 
         self.action_space = Discrete(4)
-        self.observation_space = Discrete(3)
+        self.observation_space = Box(low=0, high=255, shape=(3,3), dtype=np.uint8)
         self.move = 0
 
         board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
