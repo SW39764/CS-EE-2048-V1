@@ -190,7 +190,7 @@ class MyGameEnv(Env):
         global board
 
         self.action_space = Discrete(4)
-        self.observation_space = Box(low=0, high=255, shape=(3,3), dtype=np.uint8)
+        self.observation_space = Box(low=0, high=255, shape=(4,4), dtype=np.uint8)
         self.move = 0
 
         board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
@@ -219,6 +219,7 @@ class MyGameEnv(Env):
 
         info = {}
 
+
         return self.state, reward, done, info
 
 
@@ -230,3 +231,5 @@ class MyGameEnv(Env):
         addRandom(self.state, 2)
 
         self.move = 0
+
+        return self.state

@@ -22,8 +22,8 @@ env = MyGameEnv()
 
 def build_model(states, actions):
     model = Sequential()
-    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(4, 4, 1)))
-    model.add(Dense(24, activation='relu', input_shape=states))
+    # model.add(Conv2D(255, (3, 3), activation='relu', input_shape=(4, 4, 1)))
+    model.add(Dense(24, activation='relu', input_shape=(1,4,4)))
     model.add(Dense(24, activation='relu'))
     model.add(Flatten())
     model.add(Dense(actions, activation='linear'))
@@ -41,9 +41,9 @@ def build_agent(model, actions):
     policy = BoltzmannQPolicy()
     memory = SequentialMemory(limit=5000, window_length=1)
     dqn = DQNAgent(model=model, memory=memory, policy=policy, nb_actions=actions,
-                   nb_steps_warmup=10, target_model_update=1e-2)
+                   nb_steps_warmup=5, target_model_update=1e-2)
     return dqn
 
 dqn = build_agent(model, actions)
 dqn.compile(Adam(lr=1e-3), metrics=["mae"])
-dqn.fit(env, nb_steps=60000, visualize=False, verbose=1)
+dqn.fit(env, nb_steps=6000, visualize=False, verbose=1)
