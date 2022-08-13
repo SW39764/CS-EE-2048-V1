@@ -20,11 +20,6 @@ def runRandom(n):
 
         chosen = randomMove() + "(n)"
         n = eval(chosen)
-        # print(f"Moved {chosen[4:-3]}")
-        # printArr(n)
-
-    # print("\n\nGame Over\n")
-    # printArr(n)
     return n
 
 def oneIteration(inputGame):
