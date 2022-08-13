@@ -1,7 +1,16 @@
 import random
 from copy import deepcopy
 
+import gym
+from gym import spaces
+from gym.utils import seeding
+
 size = 4
+
+
+class Game2048Env(gym.Env):
+    env = gym.make('2048 Game')
+
 
 def addRandom(n, i = 1):
     zeroes = False
