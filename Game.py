@@ -18,7 +18,7 @@ def addRandom(n, i = 1):
             x = int(random.randint(0,3))
             y = int(random.randint(0,3))
             if n[x][y] == 0:
-                n[x][y] = (random.choices([2,4], weights = (4,1)))[0]
+                n[x][y] = (random.choices([1,2], weights = (4,1)))[0]
                 break
     return n
 
@@ -39,7 +39,7 @@ def moveLeft(n):
 
         for i in range(size - 1):
             if(row[i] == row[i+1]):
-                row[i] *= 2
+                row[i] += 1
                 row[i+1] = 0
 
         for x in range(1, size):
@@ -63,7 +63,7 @@ def moveRight(n):
 
         for i in range(size - 1, 0, -1):
             if (row[i] == row[i -1]):
-                row[i] *= 2
+                row[i] += 1
                 row[i - 1] = 0
 
         for x in range(size - 2, -1, -1):
@@ -90,7 +90,7 @@ def moveDown(n):
 
         for i in range(size - 1, 0, -1):
             if (col[i] == col[i -1]):
-                col[i] *= 2
+                col[i] += 1
                 col[i - 1] = 0
 
         for x in range(size - 2, -1, -1):
@@ -120,7 +120,7 @@ def moveUp(n):
 
         for i in range(size - 1):
             if (col[i] == col[i + 1]):
-                col[i] *= 2
+                col[i] += 1
                 col[i + 1] = 0
 
         for x in range(1, size):
@@ -144,7 +144,7 @@ def getScore(n):
     score = 0
     for row in n:
         for val in row:
-            score += val
+            score += val**2
     return score
 
 def getEmpty(n):

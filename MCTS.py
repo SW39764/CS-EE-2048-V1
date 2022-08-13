@@ -50,6 +50,7 @@ def oneIteration(inputGame):
         n = runRandom(n)
         scoreLeft += getScore(n)
         maxLeft += getMax(n)
+        emptyLeft += getEmpty(n)
 
         #right
         n = deepcopy(inputGame)
@@ -57,6 +58,7 @@ def oneIteration(inputGame):
         n = runRandom(n)
         scoreRight += getScore(n)
         maxRight += getMax(n)
+        emptyRight += getEmpty(n)
 
         #up
         n = deepcopy(inputGame)
@@ -64,6 +66,7 @@ def oneIteration(inputGame):
         n = runRandom(n)
         scoreUp += getScore(n)
         maxUp += getMax(n)
+        emptyUp += getEmpty(n)
 
         #down
         n = deepcopy(inputGame)
@@ -71,14 +74,12 @@ def oneIteration(inputGame):
         n = runRandom(n)
         scoreDown += getScore(n)
         maxDown += getMax(n)
+        emptyDown += getEmpty(n)
 
     qualityLeft = (scoreLeft / iter)/2 + (maxLeft / iter)
     qualityRight = (scoreRight / iter)/2 + (maxRight / iter)
     qualityUp = (scoreUp / iter)/2 + (maxUp / iter)
     qualityDown = (scoreDown / iter)/2 + (maxDown / iter)
-
-    # print(scoreLeft / iter, scoreRight / iter, scoreUp / iter, scoreDown / iter)
-    # print(maxLeft / iter, maxRight / iter, maxUp / iter, maxDown / iter)
 
 
     # print(f"Average Left Score: {qualityLeft}")
