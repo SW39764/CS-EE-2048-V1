@@ -4,7 +4,7 @@ import keras
 import tensorflow
 
 from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense, Flatten
+from tensorflow.python.keras.layers import Dense, Flatten, Conv2D
 from keras.optimizers import Adam
 
 from GymEnv import MyGameEnv
@@ -22,8 +22,10 @@ env = MyGameEnv()
 
 def build_model(states, actions):
     model = Sequential()
-    model.add(Dense(24, activation='relu', input_shape=(9,)))
+    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(4, 4, 1)))
+    model.add(Dense(24, activation='relu', input_shape=states))
     model.add(Dense(24, activation='relu'))
+    model.add(Flatten())
     model.add(Dense(actions, activation='linear'))
     return model
 
@@ -44,4 +46,4 @@ def build_agent(model, actions):
 
 dqn = build_agent(model, actions)
 dqn.compile(Adam(lr=1e-3), metrics=["mae"])
-dqn.fit(env, nb_steps=50000, visualize=False, verbose=1)
+dqn.fit(env, nb_steps=60000, visualize=False, verbose=1)
