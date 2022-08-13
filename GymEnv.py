@@ -227,8 +227,10 @@ class MyGameEnv(Env):
         printArr(self.state)
 
     def reset(self):
-        self.state = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-        addRandom(self.state, 2)
+        board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+        addRandom(board, 2)
+
+        self.state = board
 
         self.move = 0
 
