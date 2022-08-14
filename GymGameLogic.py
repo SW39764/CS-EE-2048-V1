@@ -92,4 +92,34 @@ class GameSave:
             for i in range(self.size-1):
                 if row[i] == row[i+1] or row[i] == 0:
                     return False
-        # for column in self.board.transpose()
+        for column in self.board.transpose():
+            for i in range(self.size-1):
+                if row[i] == row[i+1] or row[i] == 0:
+                    return False
+        return True
+
+    def getScore(self):
+        score = 0
+        for row in self.board:
+            for val in row:
+                score += val ** 2
+        return score
+
+    def getEmpty(self):
+        empty = 0
+        for row in self.board:
+            for val in row:
+                if val == 0:
+                    empty += 1
+        return empty
+
+    def getMax(self):
+        max = 0
+        for row in self.board:
+            for val in row:
+                if val > max:
+                    max = val
+        return max
+
+    def getReward(self):
+        return self.getMax()
