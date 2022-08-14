@@ -1,27 +1,30 @@
 import numpy as np
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import tensorflow as tf
 from tensorflow import keras
 
 from keras import layers, models
 
-
 from rl.agents import DQNAgent
 from rl.policy import BoltzmannQPolicy
 from rl.memory import SequentialMemory
 
+
 from GymEnv import MyGameEnv
+
 
 env = MyGameEnv()
 
-
 def build_model(states, actions):
     model = models.Sequential()
-    # model.add(Conv2D(64, (3, 3), padding="same", activation="relu", input_shape=(1,4,4)))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(layers.Dense(24, activation='relu', input_shape=states))
-    model.add(layers.Dense(24, activation='relu'))
+    # model.add(layers.Conv2D(kernel_size=2, padding='valid', activation='relu', input_shape=(1, 4, 4), filters=None))
     model.add(layers.Flatten())
+    model.add(layers.Dense(32, activation='relu'))
+    model.add(layers.Dense(256, activation='relu'))
+    model.add(layers.Dense(64, activation='relu'))
     model.add(layers.Dense(actions, activation='linear'))
     return model
 
@@ -30,18 +33,7 @@ def build_model(states, actions):
 states = env.observation_space.shape
 actions = env.action_space.n
 
-
-
-
-model = models.Sequential([
-    (layers.Flatten(input_shape=(1,4,4))),
-    (layers.Dense(24, activation='relu')),
-    (layers.Dense(24, activation='relu')),
-    (layers.Dense(actions, activation='linear'))
-])
-
-
-# model = build_model()
+model = build_model(states, actions)
 print(model.summary())
 
 def build_agent(model, actions):
@@ -51,8 +43,8 @@ def build_agent(model, actions):
     return dqn
 
 dqn = build_agent(model, actions)
-dqn.compile(tf.keras.optimizers.Adam(lr=0.0001), metrics=["mae"])
-dqn.fit(env, nb_steps=6000, visualize=False, verbose=1)
+dqn.compile(tf.keras.optimizers.Adam(lr=0.0003), metrics=["mae"])
+dqn.fit(env, nb_steps=10000, visualize=False, verbose=1)
 
 
 # print(env.observation_space.shape)

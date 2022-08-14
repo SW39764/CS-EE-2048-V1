@@ -198,11 +198,11 @@ class MyGameEnv(Env):
 
         self.state = board
 
-        print("Board")
-        printArr(board)
-        print("State")
-        printArr(self.state)
-        print("Shape", self.state.shape)
+        # print("Board")
+        # printArr(board)
+        # print("State")
+        # printArr(self.state)
+        # print("Shape", self.state.shape)
 
     def step(self, action):
         if action == 0:
