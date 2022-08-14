@@ -8,8 +8,10 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D
 from keras.optimizers import Adam
 
-from GymEnv import MyGameEnv
+from keras import layers
+from keras import layers, models
 
+from GymEnv import MyGameEnv
 
 from rl.agents import DQNAgent
 from rl.policy import BoltzmannQPolicy
@@ -23,25 +25,56 @@ def build_model(states, actions):
     model = Sequential()
     # model.add(Conv2D(64, (3, 3), padding="same", activation="relu", input_shape=(1,4,4)))
     # model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dense(24, activation='relu', input_shape=(1,4,4)))
+    model.add(Dense(24, activation='relu', input_shape=states))
     model.add(Dense(24, activation='relu'))
     model.add(Flatten())
     model.add(Dense(actions, activation='linear'))
     return model
 
+
+
 states = env.observation_space.shape
 actions = env.action_space.n
 
 
-# tf.compat.v1.disable_eager_execution()
-# session = keras.backend.get_session()
-# init = tf.compat.v1.global_variables_initializer()
-# session.run(init)
+####
 
-# from tensorflow.python.framework.ops import disable_eager_execution
-# disable_eager_execution()
+def build_model(board_size=4, board_layers=16, outputs=4, filters=64, residual_blocks=4):
+    # Functional API model
+    inputs = layers.Input(shape=(board_size * board_size * board_layers,))
+    x = layers.Reshape((board_size, board_size, board_layers))(inputs)
 
-model = build_model(states, actions)
+    # Initial convolutional block
+    x = layers.Conv2D(filters=filters, kernel_size=(3, 3), padding='same')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Activation('relu')(x)
+
+    # residual blocks
+    for i in range(residual_blocks):
+        # x at the start of a block
+        temp_x = layers.Conv2D(filters=filters, kernel_size=(3, 3), padding='same')(x)
+        temp_x = layers.BatchNormalization()(temp_x)
+        temp_x = layers.Activation('relu')(temp_x)
+        temp_x = layers.Conv2D(filters=filters, kernel_size=(3, 3), padding='same')(temp_x)
+        temp_x = layers.BatchNormalization()(temp_x)
+        x = layers.add([x, temp_x])
+        x = layers.Activation('relu')(x)
+
+    # policy head
+    x = layers.Conv2D(filters=2, kernel_size=(1, 1), padding='same')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Activation('relu')(x)
+    x = layers.Flatten()(x)
+    predictions = layers.Dense(outputs, activation='softmax')(x)
+
+    # Create model
+    return models.Model(inputs=inputs, outputs=predictions)
+
+
+###
+
+
+model = build_model()
 print(model.summary())
 
 def build_agent(model, actions):
@@ -52,5 +85,8 @@ def build_agent(model, actions):
     return dqn
 
 dqn = build_agent(model, actions)
-dqn.compile(Adam(lr=1e-3), metrics=["mae"])
-dqn.fit(env, nb_steps=6000, visualize=False, verbose=1)
+dqn.compile(Adam(lr=0.0001), metrics=["mae"])
+dqn.fit(env, nb_steps=60, visualize=False, verbose=1)
+
+
+# print(env.observation_space.shape)

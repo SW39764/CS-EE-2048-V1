@@ -184,6 +184,7 @@ def getReward(n, it):
 #endregion
 
 class MyGameEnv(Env):
+
     board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 
     def __init__(self):
@@ -191,6 +192,7 @@ class MyGameEnv(Env):
 
         self.action_space = Discrete(4)
         self.observation_space = Box(low=0, high=255, shape=(4,4), dtype=np.uint8)
+        self.shape = 4,4
         self.move = 0
 
         board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
@@ -221,7 +223,6 @@ class MyGameEnv(Env):
 
 
         return self.state, reward, done, info
-
 
     def render(self):
         printArr(self.state)
