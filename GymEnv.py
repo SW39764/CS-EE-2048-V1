@@ -198,6 +198,7 @@ def getReward(n, it):
 #endregion
 
 class MyGameEnv(Env):
+    metadata = {'render.modes': ['human']}
 
     def __init__(self):
         self.action_space = Discrete(4)
@@ -240,15 +241,16 @@ class MyGameEnv(Env):
 
         return self.state, reward, done, info
 
-    def render(self):
+    def render(self, mode = "human"):
         printArr(self.state)
+        # print("Render")
+
 
     def reset(self):
         board = np.zeros([4,4], dtype=np.uint8)
         addRandom(board, 2)
 
         self.state = board
-
         self.move = 0
 
         return self.state
