@@ -14,7 +14,7 @@ from rl.policy import BoltzmannQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
 from rl.memory import SequentialMemory
 
 
-from GymEnv import MyGameEnv, genplot
+from GymEnv import MyGameEnv
 
 
 env = MyGameEnv()
@@ -22,7 +22,7 @@ env = MyGameEnv()
 def build_model(states, actions):
     model = models.Sequential()
 
-    model.add(layers.Conv2D(filters=4,kernel_size=3,padding="same",activation="relu",input_shape=(1,4,4)))
+    model.add(layers.Conv2D(filters=4,kernel_size=3,padding="same",activation="relu",input_shape=(1,1,1)))
     # model.add(layers.Conv2D(filters=4,kernel_size=2,padding="same",activation="relu"))
     # model.add(layers.Flatten())
 
@@ -61,5 +61,3 @@ dqn.fit(env, nb_steps=1000000, visualize=True, verbose=2)
 model.save('model')
 
 # model = models.load_model('model')
-
-genplot()
