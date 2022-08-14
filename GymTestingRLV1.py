@@ -5,9 +5,7 @@ import matplotlib.pyplot as plt
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import tensorflow as tf
-from tensorflow import keras
-
-
+# from tensorflow import keras
 
 from keras import layers, models
 
@@ -25,13 +23,18 @@ env = MyGameEnv()
 def build_model(states, actions):
     model = models.Sequential()
 
-    model.add(layers.Conv2D(filters=4,kernel_size=3,padding="same",activation="relu",input_shape=(1,4,4)))
-    model.add(layers.Conv2D(filters=4,kernel_size=2,padding="same",activation="relu"))
-    # model.add(layers.Conv2D(filters=4,kernel_size=3,padding="same",activation="relu"))
+    # model.add(layers.Conv2D(filters=4,kernel_size=3,padding="same",activation="relu",input_shape=(1,4,4)))
+    # model.add(layers.Conv2D(filters=4,kernel_size=2,padding="same",activation="relu"))
+    # model.add(layers.Flatten())
+
+    # model.add(layers.Dense(12, activation='relu'))
+
+    model.add(layers.Dense(units=1024, activation="relu", input_shape=(1,4,4)))
+    model.add(layers.Dense(units=512, activation="relu"))
+    model.add(layers.Dense(units=256, activation="relu"))
 
     model.add(layers.Flatten())
 
-    model.add(layers.Dense(12, activation='relu'))
     model.add(layers.Dense(actions, activation='linear'))
 
     return model
@@ -45,15 +48,15 @@ print(model.summary())
 
 def build_agent(model, actions):
     policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1., value_min=0.1, value_test=0.1, nb_steps=1000)
-    memory = SequentialMemory(limit=50000, window_length=1)
-    dqn = DQNAgent(model=model, memory=memory, policy=policy, nb_actions=actions,nb_steps_warmup=1000, target_model_update=1e-2)
+    memory = SequentialMemory(limit=5000, window_length=1)
+    dqn = DQNAgent(model=model, memory=memory, policy=policy, nb_actions=actions,nb_steps_warmup=1000, batch_size=200)
     return dqn
 
 # import visualkeras
 # visualkeras.layered_view(model, to_file='output.png')
 
 dqn = build_agent(model, actions)
-dqn.compile(tf.keras.optimizers.Adam(lr=1e-2))
-dqn.fit(env, nb_steps=10000, visualize=False, verbose=2)
+dqn.compile(tf.keras.optimizers.Adam(lr=0.005))
+dqn.fit(env, nb_steps=50000, visualize=False, verbose=2)
 
 genplot()

@@ -164,6 +164,7 @@ def gameOver(n):
             max = num
         maxs.append(num)
         print(num, "      ", max)
+        printArr(n)
 
     return (n == moveUp(n)).all() and (n == moveDown(n)).all() and (n == moveLeft(n)).all() and (n == moveRight(n)).all()
 
@@ -191,7 +192,8 @@ def getMax(n):
     return max
 
 def getReward(n, it):
-    return getScore(n) + getMax(n) + getEmpty(n)*0.5 + it * 0.05
+    # return getScore(n) + getMax(n) + getEmpty(n)*0.5 + it * 0.05
+    return ((getMax(n) + (getScore(n)**0.5)/10)/10)
 
 #endregion
 
@@ -221,12 +223,17 @@ class MyGameEnv(Env):
 
         self.move += 1
 
-        reward = getReward(self.state, self.move)
 
         if gameOver(self.state):
             done = True
         else:
             done = False
+
+        if done:
+            reward = -1
+        else:
+            reward = getReward(self.state, self.move)
+
 
         info = {}
 
