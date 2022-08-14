@@ -5,7 +5,7 @@ from copy import deepcopy
 mainGame = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
 mainGame = addRandom(mainGame, 2)
 
-iter = 30
+iter = 15
 
 
 
