@@ -5,9 +5,10 @@ from copy import deepcopy
 
 import numpy as np
 
-import gym
 from gym import Env
 from gym.spaces import Discrete, Box
+
+import matplotlib.pyplot as plt
 
 #endregion
 
@@ -151,7 +152,18 @@ def moveUp(n):
     curr = addRandom(curr, 1)
     return curr
 
+max = 0
+maxs = []
+
 def gameOver(n):
+    global max
+    global maxs
+    if (n == moveUp(n)).all() and (n == moveDown(n)).all() and (n == moveLeft(n)).all() and (n == moveRight(n)).all():
+        num = getMax(n)
+        if num > max:
+            max = num
+        maxs.append(num)
+        print(num, "      ", max)
 
     return (n == moveUp(n)).all() and (n == moveDown(n)).all() and (n == moveLeft(n)).all() and (n == moveRight(n)).all()
 
@@ -179,7 +191,7 @@ def getMax(n):
     return max
 
 def getReward(n, it):
-    return getMax(n) + getEmpty(n) + getScore(n)**0.5
+    return getScore(n) + getMax(n) + getEmpty(n)*0.5 + it * 0.05
 
 #endregion
 
@@ -187,7 +199,6 @@ class MyGameEnv(Env):
 
     def __init__(self):
         self.action_space = Discrete(4)
-        # self.observation_space = Box(low=0, high=255, shape=(1,4,4), dtype=np.uint8)
         self.observation_space = Box(0, 16, [4,4,1], dtype=int)
         self.shape = 4,4
         self.move = 0
@@ -236,3 +247,6 @@ class MyGameEnv(Env):
         return self.state
 
 
+def genplot():
+    plt.plot(maxs)
+    plt.show()
