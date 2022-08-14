@@ -10,6 +10,8 @@ from gym.spaces import Discrete, Box
 
 import matplotlib.pyplot as plt
 
+import GymGameLogic
+
 #endregion
 
 #region SETTINGS
@@ -43,130 +45,55 @@ def printArr(n):
         print(y)
     print()
 
-def moveLeft(n):
-    curr = deepcopy(n)
-    for it in range(size):
-        row = curr[it]
-        for _ in range(size - 1):
-            for x in range(1, size):
-                if row[x - 1] == 0:
-                    row[x - 1] = row[x]
-                    row[x] = 0
 
-        for i in range(size - 1):
-            if (row[i] == row[i + 1]):
-                row[i] += 1
-                row[i + 1] = 0
+def mergeRowL(row):
+    for i in range(size - 1):
+        for j in range(size-1, 0, -1):
+            if row[i-1] == 0:
+                row[i-1] = row[i]
+                row[i] = 0
+    for i in range(size - 1):
+        if row[i] == row[i+1]:
+            row[i] += 1
+            row[i+1] = 0
+    for i in range(size - 1, 0, -1):
+        if row[i-1] == 0:
+            row[i-1] = row[i]
+            row[i] = 0
+    return row
 
-        for x in range(1, size):
-            if row[x - 1] == 0:
-                row[x - 1] = row[x]
-                row[x] = 0
+def moveLeft(b):
+    for i in range(size):
+        b[i] = mergeRowL(b[i])
+    return b
 
-        curr[it] = row
-    curr = addRandom(curr, 1)
-    return curr
 
 def moveRight(n):
-    curr = deepcopy(n)
-    for it in range(size):
-        row = curr[it]
-        for _ in range(size - 1):
-            for x in range(size - 2, -1, -1):
-                if row[x + 1] == 0:
-                    row[x + 1] = row[x]
-                    row[x] = 0
-
-        for i in range(size - 1, 0, -1):
-            if (row[i] == row[i - 1]):
-                row[i] += 1
-                row[i - 1] = 0
-
-        for x in range(size - 2, -1, -1):
-            if row[x + 1] == 0:
-                row[x + 1] = row[x]
-                row[x] = 0
-
-        curr[it] = row
-    curr = addRandom(curr, 1)
-    return curr
-
-def moveDown(n):
-    curr = deepcopy(n)
-    for it in range(size):
-        col = [x[it] for x in curr]
-
-        # print(f"\n{col}")
-
-        for _ in range(size - 1):
-            for x in range(size - 2, -1, -1):
-                if col[x + 1] == 0:
-                    col[x + 1] = col[x]
-                    col[x] = 0
-
-        for i in range(size - 1, 0, -1):
-            if (col[i] == col[i - 1]):
-                col[i] += 1
-                col[i - 1] = 0
-
-        for x in range(size - 2, -1, -1):
-            if col[x + 1] == 0:
-                col[x + 1] = col[x]
-                col[x] = 0
-
-        # print(f"{col}\n")
-
-        for i, val in enumerate(col):
-            curr[i][it] = val
-    curr = addRandom(curr, 1)
-    return curr
+    return
 
 def moveUp(n):
-    curr = deepcopy(n)
-    for it in range(size):
-        col = [x[it] for x in curr]
+    return
 
-        # print(f"\n{col}")
-
-        for _ in range(size - 1):
-            for x in range(1, size):
-                if col[x - 1] == 0:
-                    col[x - 1] = col[x]
-                    col[x] = 0
-
-        for i in range(size - 1):
-            if (col[i] == col[i + 1]):
-                col[i] += 1
-                col[i + 1] = 0
-
-        for x in range(1, size):
-            if col[x - 1] == 0:
-                col[x - 1] = col[x]
-                col[x] = 0
-
-        # print(f"{col}\n")
-
-        for i, val in enumerate(col):
-            curr[i][it] = val
-
-    curr = addRandom(curr, 1)
-    return curr
+def moveDown(n):
+    return
 
 max = 0
 maxs = []
 
-def gameOver(n):
+def gameOver(b):
     global max
     global maxs
-    if (n == moveUp(n)).all() and (n == moveDown(n)).all() and (n == moveLeft(n)).all() and (n == moveRight(n)).all():
-        num = getMax(n)
-        if num > max:
-            max = num
-        maxs.append(num)
-        print(num, "      ", max)
-        printArr(n)
 
-    return (n == moveUp(n)).all() and (n == moveDown(n)).all() and (n == moveLeft(n)).all() and (n == moveRight(n)).all()
+    # same = b == moveUp(b).all() == moveDown(b).all() == moveRight(b).all() == moveLeft(b).all()
+    # if same:
+    #     num = getMax(b)
+    #     if num > max:
+    #         max = num
+    #     maxs.append(num)
+    #     print(num, "      ", max)
+    #     printArr(b)
+
+    return False
 
 def getScore(n):
     score = 0
