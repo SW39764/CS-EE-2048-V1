@@ -153,7 +153,7 @@ def moveUp(n):
 
 def gameOver(n):
 
-    return n == moveUp(n) and n == moveDown(n) and n == moveLeft(n) and n == moveRight(n)
+    return (n == moveUp(n)).all() and (n == moveDown(n)).all() and (n == moveLeft(n)).all() and (n == moveRight(n)).all()
 
 def getScore(n):
     score = 0
@@ -179,26 +179,30 @@ def getMax(n):
     return max
 
 def getReward(n, it):
-    return getMax(n)**0.5 + getEmpty(n) + getScore(n)**0.5
+    return getMax(n) + getEmpty(n) + getScore(n)**0.5
 
 #endregion
 
 class MyGameEnv(Env):
 
-    board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-
     def __init__(self):
-        global board
-
         self.action_space = Discrete(4)
-        self.observation_space = Box(low=0, high=255, shape=(4,4), dtype=np.uint8)
+        # self.observation_space = Box(low=0, high=255, shape=(1,4,4), dtype=np.uint8)
+        self.observation_space = Box(0, 16, [4,4,1], dtype=int)
         self.shape = 4,4
         self.move = 0
 
-        board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+        board = np.zeros([4,4], dtype=np.uint8)
         addRandom(board, 2)
 
+
         self.state = board
+
+        print("Board")
+        printArr(board)
+        print("State")
+        printArr(self.state)
+        print("Shape", self.state.shape)
 
     def step(self, action):
         if action == 0:
@@ -228,7 +232,7 @@ class MyGameEnv(Env):
         printArr(self.state)
 
     def reset(self):
-        board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+        board = np.zeros([4,4], dtype=np.uint8)
         addRandom(board, 2)
 
         self.state = board
@@ -236,3 +240,5 @@ class MyGameEnv(Env):
         self.move = 0
 
         return self.state
+
+
