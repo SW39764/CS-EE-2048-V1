@@ -22,17 +22,16 @@ env = MyGameEnv()
 def build_model(states, actions):
     model = models.Sequential()
 
-    model.add(layers.Conv2D(filters=16,kernel_size=2,padding="same",activation="relu",input_shape=(1,4,4)))
+    model.add(layers.Conv2D(filters=32,kernel_size=2,padding="same",activation="relu",input_shape=(1,4,4)))
+    model.add(layers.Conv2D(filters=64,kernel_size=2,padding="same",activation="relu"))
 
     model.add(layers.Flatten())
 
-    model.add(layers.Dense(24, activation='relu'))
-    model.add(layers.Dense(24, activation='relu'))
-    model.add(layers.Flatten())
+    model.add(layers.Dense(64, activation='relu'))
+    model.add(layers.Dense(32, activation='relu'))
     model.add(layers.Dense(actions, activation='linear'))
 
     return model
-
 
 
 states = env.observation_space.shape
@@ -48,8 +47,8 @@ def build_agent(model, actions):
     return dqn
 
 dqn = build_agent(model, actions)
-dqn.compile(tf.keras.optimizers.Adam(lr=0.0003), metrics=["mae"])
-dqn.fit(env, nb_steps=10000, visualize=False, verbose=1)
+dqn.compile(tf.keras.optimizers.Adam(lr=0.0001), metrics=["mae"])
+dqn.fit(env, nb_steps=100000, visualize=False, verbose=1)
 
 
 # print(env.observation_space.shape)
