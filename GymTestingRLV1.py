@@ -18,14 +18,19 @@ from GymEnv import MyGameEnv
 
 env = MyGameEnv()
 
+
 def build_model(states, actions):
     model = models.Sequential()
-    # model.add(layers.Conv2D(kernel_size=2, padding='valid', activation='relu', input_shape=(1, 4, 4), filters=None))
+
+    model.add(layers.Conv2D(filters=16,kernel_size=2,padding="same",activation="relu",input_shape=(1,4,4)))
+
     model.add(layers.Flatten())
-    model.add(layers.Dense(32, activation='relu'))
-    model.add(layers.Dense(256, activation='relu'))
-    model.add(layers.Dense(64, activation='relu'))
+
+    model.add(layers.Dense(24, activation='relu'))
+    model.add(layers.Dense(24, activation='relu'))
+    model.add(layers.Flatten())
     model.add(layers.Dense(actions, activation='linear'))
+
     return model
 
 
