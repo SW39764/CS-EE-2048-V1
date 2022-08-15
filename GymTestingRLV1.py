@@ -23,11 +23,10 @@ env = MyGameEnv()
 def build_model(states, actions):
     model = models.Sequential()
 
-    model.add(layers.Conv2D(filters=32,kernel_size=2,padding="same",activation="relu",input_shape=(1,4,4)))
-    model.add(layers.Conv2D(filters=64,kernel_size=2,padding="same",activation="relu"))
+    model.add(layers.Conv2D(filters=16,kernel_size=3,padding="same",activation="relu",input_shape=(1,4,4)))
     model.add(layers.Conv2D(filters=32,kernel_size=2,padding="same",activation="relu"))
     model.add(layers.Flatten())
-    model.add(layers.Dense(units=256, activation="relu"))
+    model.add(layers.Dense(units=128, activation="relu"))
     model.add(layers.Dense(actions, activation='linear'))
 
 

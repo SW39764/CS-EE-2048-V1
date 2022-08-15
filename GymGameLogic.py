@@ -15,6 +15,7 @@ class GameSave:
         self.size = size
         self.board = np.zeros([size, size], dtype=np.uint8)
         self.addRandom(2)
+        self.maxReward = 7
 
     def addRandom(self, i=1):
         zeroes = False
