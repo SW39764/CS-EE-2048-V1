@@ -20,30 +20,27 @@ class MyGameEnv(Env):
         self.state = GameSave()
 
     def step(self, action):
-        if action == 0:
-            self.state.moveLeft()
-        if action == 1:
-            self.state.moveRight()
-        if action == 2:
-            self.state.moveUp()
-        if action == 3:
-            self.state.moveDown()
-
         self.move += 1
 
+        reward = 0
+
+        if action == 0:
+            reward = self.state.moveLeft()
+        elif action == 1:
+            reward = self.state.moveRight()
+        elif action == 2:
+            reward = self.state.moveUp()
+        else:
+            reward = self.state.moveDown()
 
         if self.state.gameOver():
-            if self.state.getMax()==7:
-                reward = 1
-            else:
-                reward = -1
             done = True
+            if self.state.getMax() < 7:
+                reward = -1
         else:
             done = False
-            reward = 0
 
         info = {}
-
         return self.state.board, reward, done, info
 
     def render(self, mode = "human"):
