@@ -1,7 +1,14 @@
 import  numpy as np
 import random
 import copy
+import matplotlib.pyplot as plt
 
+global maxs
+maxs = []
+
+def plotMaxs():
+    plt.plot(maxs)
+    plt.show()
 
 class GameSave:
     def __init__(self, size = 4):
@@ -96,6 +103,9 @@ class GameSave:
             for i in range(self.size-1):
                 if row[i] == row[i+1] or row[i] == 0:
                     return False
+        max = self.getMax()
+        print(max)
+        maxs.append(max)
         return True
 
     def getScore(self):
@@ -122,4 +132,4 @@ class GameSave:
         return max
 
     def getReward(self):
-        return self.getMax()
+        return self.getMax()/10 + self.getEmpty()/30

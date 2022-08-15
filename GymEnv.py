@@ -38,7 +38,7 @@ class MyGameEnv(Env):
             done = False
 
         if done:
-            reward = -4
+            reward = -5
         else:
             reward = self.state.getReward()
 
@@ -54,4 +54,4 @@ class MyGameEnv(Env):
         self.state = GameSave()
         self.move = 0
 
-        return self.state
+        return self.state.board

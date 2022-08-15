@@ -15,6 +15,7 @@ from rl.memory import SequentialMemory
 
 
 from GymEnv import MyGameEnv
+from GymGameLogic import plotMaxs
 
 
 env = MyGameEnv()
@@ -22,18 +23,18 @@ env = MyGameEnv()
 def build_model(states, actions):
     model = models.Sequential()
 
-    model.add(layers.Conv2D(filters=4,kernel_size=3,padding="same",activation="relu",input_shape=(1,1,1)))
-    # model.add(layers.Conv2D(filters=4,kernel_size=2,padding="same",activation="relu"))
-    # model.add(layers.Flatten())
-
-    # model.add(layers.Dense(12, activation='relu'))
-
-    model.add(layers.Dense(units=512, activation="relu"))
-    model.add(layers.Dense(units=128, activation="relu"))
-
+    model.add(layers.Conv2D(filters=32,kernel_size=2,padding="same",activation="relu",input_shape=(1,4,4)))
+    model.add(layers.Conv2D(filters=64,kernel_size=2,padding="same",activation="relu"))
     model.add(layers.Flatten())
-
+    model.add(layers.Dense(units=256, activation="relu"))
     model.add(layers.Dense(actions, activation='linear'))
+
+
+    # model.add(layers.Flatten(input_shape=(1,4,4)))
+    # model.add(layers.Dense(units=1024, activation="relu"))
+    # model.add(layers.Dense(units=512, activation="relu"))
+    # model.add(layers.Dense(units=256, activation="relu"))
+    # model.add(layers.Dense(actions, activation='linear'))
 
     return model
 
@@ -54,9 +55,10 @@ def build_agent(model, actions):
 # visualkeras.layered_view(model, to_file='output.png')
 
 dqn = build_agent(model, actions)
-dqn.compile(tf.keras.optimizers.Adam(lr=0.005))
-dqn.fit(env, nb_steps=1000000, visualize=True, verbose=2)
+dqn.compile(tf.keras.optimizers.Adam(lr=0.00025))
+dqn.fit(env, nb_steps=10000, visualize=False, verbose=2)
 
+plotMaxs()
 
 model.save('model')
 

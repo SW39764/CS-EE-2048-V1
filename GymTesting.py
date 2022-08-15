@@ -1,5 +1,6 @@
 import gym
 import random
+import numpy as np
 
 from GymEnv import MyGameEnv
 
@@ -16,6 +17,7 @@ for episode in range(1, episodes+1):
         # env.render()
         action = env.action_space.sample()
         n_state, reward, done, info = env.step(action)
+        # print(np.shape(n_state))
         score += reward
     print("Episode : {} Score : {}".format(episode, score))
 
