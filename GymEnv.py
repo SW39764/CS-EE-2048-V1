@@ -25,18 +25,17 @@ class MyGameEnv(Env):
         reward = 0
 
         if action == 0:
-            reward = self.state.moveLeft()
+            self.state.moveLeft()
         elif action == 1:
-            reward = self.state.moveRight()
+            self.state.moveRight()
         elif action == 2:
-            reward = self.state.moveUp()
+            self.state.moveUp()
         else:
-            reward = self.state.moveDown()
+            self.state.moveDown()
 
         if self.state.gameOver():
+            reward = self.state.getMax()-6
             done = True
-            if self.state.getMax() < 7:
-                reward = -1
         else:
             done = False
 

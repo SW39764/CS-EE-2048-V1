@@ -40,12 +40,6 @@ class GameSave:
             print(y)
         print()
 
-    def newMax(self):
-        if self.getMax() >= self.maxReward:
-            self.maxReward += 1
-            return 1
-        return 0
-
     def mergeRowL(self, row):
         for i in range(self.size - 1):
             for j in range(self.size - 1, 0, -1):
@@ -69,8 +63,6 @@ class GameSave:
 
         self.addRandom()
 
-        return self.newMax()
-
     def moveRight(self):
         for i in range(self.size):
             arr = self.board[i]
@@ -81,8 +73,6 @@ class GameSave:
 
         self.addRandom()
 
-        return self.newMax()
-
     def moveUp(self):
         self.board = self.board.transpose()
         for i in range(self.size):
@@ -92,8 +82,6 @@ class GameSave:
         self.board = self.board.transpose()
 
         self.addRandom()
-
-        return self.newMax()
 
     def moveDown(self):
         self.board = self.board.transpose()
@@ -106,8 +94,6 @@ class GameSave:
         self.board = self.board.transpose()
 
         self.addRandom()
-
-        return self.newMax()
 
     def gameOver(self):
         for row in self.board:
