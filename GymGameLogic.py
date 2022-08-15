@@ -97,15 +97,20 @@ class GameSave:
     def gameOver(self):
         for row in self.board:
             for i in range(self.size-1):
-                if row[i] == row[i+1] or row[i] == 0:
+                if row[i] == row[i+1]:
                     return False
         for column in self.board.transpose():
             for i in range(self.size-1):
-                if row[i] == row[i+1] or row[i] == 0:
+                if column[i] == column[i+1]:
+                    return False
+        for row in self.board:
+            for n in row:
+                if n == 0:
                     return False
         max = self.getMax()
         print(max)
         maxs.append(max)
+        # self.printArr()
         return True
 
     def getScore(self):
