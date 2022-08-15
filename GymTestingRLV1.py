@@ -51,7 +51,7 @@ def build_agent(model, actions):
     # dqn = DQNAgent(model=model, memory=memory, policy=policy, nb_actions=actions,nb_steps_warmup=1000, batch_size=200)
 
     memory = SequentialMemory(limit=5000, window_length=1)
-    TRAIN_POLICY = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=0.05, value_min=0.05, value_test=0.01, nb_steps=1e5)
+    TRAIN_POLICY = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1., value_min=0.1, value_test=0.01, nb_steps=1e5)
 
     dqn = DQNAgent(model=model, nb_actions=4, policy=TRAIN_POLICY, memory=memory, nb_steps_warmup=5000, gamma=.99, target_model_update=1000,
                    train_interval=4, delta_clip=1.)
@@ -61,7 +61,7 @@ def build_agent(model, actions):
 # visualkeras.layered_view(model, to_file='output.png')
 
 dqn = build_agent(model, actions)
-dqn.compile(tf.keras.optimizers.Adam(lr=0.00025))
+dqn.compile(tf.keras.optimizers.Adam(lr=0.001))
 dqn.fit(env, nb_steps=500000, visualize=False, verbose=2)
 
 plotMaxs()
