@@ -25,6 +25,7 @@ def build_model(states, actions):
 
     model.add(layers.Conv2D(filters=32,kernel_size=2,padding="same",activation="relu",input_shape=(1,4,4)))
     model.add(layers.Conv2D(filters=64,kernel_size=2,padding="same",activation="relu"))
+    model.add(layers.Conv2D(filters=32,kernel_size=2,padding="same",activation="relu"))
     model.add(layers.Flatten())
     model.add(layers.Dense(units=256, activation="relu"))
     model.add(layers.Dense(actions, activation='linear'))
@@ -62,7 +63,7 @@ def build_agent(model, actions):
 
 dqn = build_agent(model, actions)
 dqn.compile(tf.keras.optimizers.Adam(lr=0.00025))
-dqn.fit(env, nb_steps=100000, visualize=False, verbose=2)
+dqn.fit(env, nb_steps=500000, visualize=False, verbose=2)
 
 plotMaxs()
 

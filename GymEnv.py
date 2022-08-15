@@ -33,14 +33,14 @@ class MyGameEnv(Env):
 
 
         if self.state.gameOver():
+            if self.state.getMax()==7:
+                reward = 1
+            else:
+                reward = -1
             done = True
         else:
             done = False
-
-        if done:
-            reward = -5
-        else:
-            reward = self.state.getReward()
+            reward = 0
 
         info = {}
 

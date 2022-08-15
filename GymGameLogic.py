@@ -95,6 +95,11 @@ class GameSave:
         self.addRandom()
 
     def gameOver(self):
+        if self.getMax() == 7:
+            max = self.getMax()
+            print(max)
+            maxs.append(max)
+            return True
         for row in self.board:
             for i in range(self.size-1):
                 if row[i] == row[i+1]:
@@ -137,4 +142,4 @@ class GameSave:
         return max
 
     def getReward(self):
-        return self.getMax()/10 + self.getEmpty()/30
+        return
