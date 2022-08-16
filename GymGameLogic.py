@@ -129,7 +129,7 @@ class GameSave:
                 if n == 0:
                     return False
         max = self.getMax()
-        print(max)
+        # print(max)
         maxs.append(max)
         # self.printArr()
         return True

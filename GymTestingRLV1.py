@@ -70,8 +70,8 @@ def build_agent(model, actions):
 # visualkeras.layered_view(model, to_file='output.png')
 
 dqn = build_agent(model, actions)
-dqn.compile(tf.keras.optimizers.Adam(lr=0.001))
-dqn.fit(env, nb_steps=100000, visualize=False, verbose=2)
+dqn.compile(tf.keras.optimizers.Adam(lr=0.005))
+dqn.fit(env, nb_steps=1000000, visualize=False, verbose=2)
 
 model.save('model')
 
