@@ -26,19 +26,7 @@ class MyGameEnv(Env):
 
         reward = 0
 
-        # currState = deepcopy(self.state.board)
-
-        if action == 0:
-            self.state.moveLeft()
-        elif action == 1:
-            self.state.moveRight()
-        elif action == 2:
-            self.state.moveUp()
-        else:
-            self.state.moveDown()
-
-        # if currState.all() == self.state.board.all():
-        #     reward = -0.1
+        self.state.move(action)
 
         if self.state.gameOver():
             done = True

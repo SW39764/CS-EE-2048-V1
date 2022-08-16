@@ -61,13 +61,13 @@ class GameSave:
         return row
 
     def moveLeft(self):
-        copy = deepcopy(self.board)
+        copy = deepcopy(self)
 
         for i in range(self.size):
             self.board[i] = self.mergeRowL(self.board[i])
 
-        if (copy.all() != self.board.all()):
-            return
+        if np.array_equal(copy.board, self.board):
+            return "illegal"
         self.addRandom()
 
     def moveRight(self):
@@ -80,10 +80,9 @@ class GameSave:
             arr = arr[::-1]
             self.board[i] = arr
 
-        if (copy.all() == self.board.all()):
-            return
+        if np.array_equal(copy, self.board):
+            return "illegal"
         self.addRandom()
-
 
     def moveUp(self):
         copy = deepcopy(self.board)
@@ -95,8 +94,8 @@ class GameSave:
             self.board[i] = arr
         self.board = self.board.transpose()
 
-        if(copy.all() != self.board.all()):
-            return
+        if np.array_equal(copy, self.board):
+            return "illegal"
         self.addRandom()
 
     def moveDown(self):
@@ -111,8 +110,8 @@ class GameSave:
             self.board[i] = arr
         self.board = self.board.transpose()
 
-        if (copy.all() != self.board.all()):
-            return
+        if np.array_equal(copy, self.board):
+            return "illegal"
         self.addRandom()
 
     def gameOver(self):
@@ -159,3 +158,13 @@ class GameSave:
 
     def getReward(self):
         return
+
+    def move(self, direction):
+        if direction == 0:
+            return self.moveLeft()
+        elif direction == 1:
+            return self.moveRight()
+        elif direction == 2:
+            return self.moveUp()
+        else:
+            return self.moveDown()

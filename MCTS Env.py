@@ -1,10 +1,14 @@
 from GymEnv import MyGameEnv
+from GymGameLogic import GameSave
 import numpy as np
 from random import randint
 from copy import deepcopy
+import operator
 
-iter = 10
+iter = 30
 size = 4
+
+p_moves = ["Left", "Right", "Up", "Down"]
 
 def getRandomMove():
     return randint(0,3)
@@ -15,62 +19,69 @@ def runRandom(game):
         # game.render()
 
 def oneIteration():
-    scores = [0,0,0,0]
-    empty = [0,0,0,0]
-    max = [0,0,0,0]
+    scoresVals = [0,0,0,0]
+    emptyVals = [0,0,0,0]
+    maxVals = [0,0,0,0]
+
 
     for _ in range(iter):
         #left
         currentGame = deepcopy(env)
         currentGame.step(0)
         runRandom(currentGame)
-        scores[0] += currentGame.state.getScore()
-        empty[0] += currentGame.state.getEmpty()
-        max[0] += currentGame.state.getMax()
+        scoresVals[0] += currentGame.state.getScore()
+        emptyVals[0] += currentGame.state.getEmpty()
+        maxVals[0] += currentGame.state.getMax()
 
         #right
         currentGame = deepcopy(env)
         currentGame.step(1)
         runRandom(currentGame)
-        scores[1] += currentGame.state.getScore()
-        empty[1] += currentGame.state.getEmpty()
-        max[1] += currentGame.state.getMax()
+        scoresVals[1] += currentGame.state.getScore()
+        emptyVals[1] += currentGame.state.getEmpty()
+        maxVals[1] += currentGame.state.getMax()
 
         #up
         currentGame = deepcopy(env)
         currentGame.step(2)
         runRandom(currentGame)
-        scores[2] += currentGame.state.getScore()
-        empty[2] += currentGame.state.getEmpty()
-        max[2] += currentGame.state.getMax()
+        scoresVals[2] += currentGame.state.getScore()
+        emptyVals[2] += currentGame.state.getEmpty()
+        maxVals[2] += currentGame.state.getMax()
 
         #down
         currentGame = deepcopy(env)
         currentGame.step(3)
         runRandom(currentGame)
-        scores[3] += currentGame.state.getScore()
-        empty[3] += currentGame.state.getEmpty()
-        max[3] += currentGame.state.getMax()**2
+        scoresVals[3] += currentGame.state.getScore()
+        emptyVals[3] += currentGame.state.getEmpty()
+        maxVals[3] += currentGame.state.getMax()**2
+    qualityLeft = ((scoresVals[0] + maxVals[0]) / iter) * checkNotIllegal(env, 0)
+    qualityRight = ((scoresVals[1] + maxVals[1]) / iter) * checkNotIllegal(env, 1)
+    qualityUp = ((scoresVals[2] + maxVals[2]) / iter) * checkNotIllegal(env, 2)
+    qualityDown = ((scoresVals[3] + maxVals[3]) / iter) * checkNotIllegal(env, 3)
 
-    qualityLeft = (scores[0] + max[0]) / iter
-    qualityRight = (scores[1] + max[1]) / iter
-    qualityUp = (scores[2] + max[2]) / iter
-    qualityDown = (scores[3] + max[3]) / iter
+    qualities = [qualityLeft, qualityRight, qualityUp, qualityDown]
 
-    if qualityLeft > qualityRight and qualityLeft > qualityUp and qualityLeft > qualityDown:
-        env.step(0)
-    elif qualityRight > qualityDown and qualityRight > qualityUp:
-        env.step(1)
-    elif qualityUp > qualityDown:
-        env.step(2)
-    else:
-        env.step(3)
+    print("\n")
 
-    print("\n\n\n")
-    print(f"Average Left Quality: {qualityLeft}")
-    print(f"Average Right Quality: {qualityRight}")
-    print(f"Average Up Quality: {qualityUp}")
-    print(f"Average Down Quality: {qualityDown}")
+    print(qualities)
+
+    tmp = max(qualities)
+    best = qualities.index(tmp)
+    print(p_moves[best])
+
+    env.render()
+
+    env.step(best)
+
+def checkNotIllegal(save, direction):
+    copy = deepcopy(save)
+    if copy.state.move(direction) == "illegal":
+        print("Illegal")
+        return False
+    return True
+
 
 if __name__ == "__main__":
     env = MyGameEnv()
@@ -78,4 +89,4 @@ if __name__ == "__main__":
     while not env.state.gameOver():
         oneIteration()
         # print(env.state.score)
-        env.render()
+        # env.render()
