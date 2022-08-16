@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 
 from GymGameLogic import GameSave
 
+from copy import deepcopy
+
 class MyGameEnv(Env):
     metadata = {'render.modes': ['human']}
 
@@ -24,6 +26,8 @@ class MyGameEnv(Env):
 
         reward = 0
 
+        # currState = deepcopy(self.state.board)
+
         if action == 0:
             self.state.moveLeft()
         elif action == 1:
@@ -33,9 +37,15 @@ class MyGameEnv(Env):
         else:
             self.state.moveDown()
 
+        # if currState.all() == self.state.board.all():
+        #     reward = -0.1
+
         if self.state.gameOver():
-            reward = self.state.getMax()-6
             done = True
+            if self.state.getMax() > 7:
+                reward = 1
+            else:
+                reward = -1
         else:
             done = False
 

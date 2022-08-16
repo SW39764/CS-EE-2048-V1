@@ -2,6 +2,7 @@ import  numpy as np
 import random
 import copy
 import matplotlib.pyplot as plt
+from copy import deepcopy
 
 global maxs
 maxs = []
@@ -16,6 +17,7 @@ class GameSave:
         self.board = np.zeros([size, size], dtype=np.uint8)
         self.addRandom(2)
         self.maxReward = 7
+        self.score = 0
 
     def addRandom(self, i=1):
         zeroes = False
@@ -51,6 +53,7 @@ class GameSave:
                 if row[i] != 0 :
                     row[i] += 1
                     row[i + 1] = 0
+                    self.score += row[i]**2
         for i in range(self.size - 1, 0, -1):
             if row[i - 1] == 0:
                 row[i - 1] = row[i]
@@ -58,12 +61,18 @@ class GameSave:
         return row
 
     def moveLeft(self):
+        copy = deepcopy(self.board)
+
         for i in range(self.size):
             self.board[i] = self.mergeRowL(self.board[i])
 
+        if (copy.all() != self.board.all()):
+            return
         self.addRandom()
 
     def moveRight(self):
+        copy = deepcopy(self.board)
+
         for i in range(self.size):
             arr = self.board[i]
             arr = arr[::-1]
@@ -71,9 +80,14 @@ class GameSave:
             arr = arr[::-1]
             self.board[i] = arr
 
+        if (copy.all() == self.board.all()):
+            return
         self.addRandom()
 
+
     def moveUp(self):
+        copy = deepcopy(self.board)
+
         self.board = self.board.transpose()
         for i in range(self.size):
             arr = self.board[i]
@@ -81,9 +95,13 @@ class GameSave:
             self.board[i] = arr
         self.board = self.board.transpose()
 
+        if(copy.all() != self.board.all()):
+            return
         self.addRandom()
 
     def moveDown(self):
+        copy = deepcopy(self.board)
+
         self.board = self.board.transpose()
         for i in range(self.size):
             arr = self.board[i]
@@ -93,6 +111,8 @@ class GameSave:
             self.board[i] = arr
         self.board = self.board.transpose()
 
+        if (copy.all() != self.board.all()):
+            return
         self.addRandom()
 
     def gameOver(self):
