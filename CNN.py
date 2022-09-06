@@ -21,8 +21,8 @@ from rl.policy import BoltzmannQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
 from rl.memory import SequentialMemory
 
 
-from GymEnv import MyGameEnv
-from GymGameLogic import plotMaxs
+from Environment import MyGameEnv
+from Logic import plotMaxs
 
 
 

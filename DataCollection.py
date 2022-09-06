@@ -1,6 +1,6 @@
 import csv
-import MCTSEnv
-import GymTestingRLV1
+import MCTS
+import CNN
 
 header = ['Max Tile Size', 'Score']
 

@@ -5,7 +5,7 @@ from gym.spaces import Discrete, Box
 
 import matplotlib.pyplot as plt
 
-from GymGameLogic import GameSave
+from Logic import GameSave
 
 from copy import deepcopy
 
