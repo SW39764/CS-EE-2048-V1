@@ -84,7 +84,7 @@ def build_agent(model, actions):
 
 def runner():
     runEnv = MyGameEnv()
-    runEnv.state.printArr()
+    # runEnv.state.printArr()
 
     model = models.load_model('model')
 
@@ -111,4 +111,4 @@ def runner():
 
     print("Done")
     runEnv.state.printArr()
-    return([runEnv.state.getMax(), runEnv.state.score])
+    return([2**runEnv.state.getMax(), runEnv.state.score])

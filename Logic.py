@@ -53,7 +53,7 @@ class GameSave:
                 if row[i] != 0 :
                     row[i] += 1
                     row[i + 1] = 0
-                    self.score += row[i]**2
+                    self.score += 2**row[i]
         for i in range(self.size - 1, 0, -1):
             if row[i - 1] == 0:
                 row[i - 1] = row[i]
@@ -137,7 +137,7 @@ class GameSave:
         score = 0
         for row in self.board:
             for val in row:
-                score += val ** 2
+                score += 2**val
         return score
 
     def getEmpty(self):
