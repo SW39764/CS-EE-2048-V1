@@ -3,10 +3,11 @@ from GymGameLogic import GameSave
 import numpy as np
 from random import randint
 from copy import deepcopy
-import operator
 
 iter = 30
 size = 4
+
+env = MyGameEnv()
 
 p_moves = ["Left", "Right", "Up", "Down"]
 
@@ -29,42 +30,42 @@ def oneIteration():
         currentGame = deepcopy(env)
         currentGame.step(0)
         runRandom(currentGame)
-        scoresVals[0] += currentGame.state.getScore()
+        scoresVals[0] += currentGame.state.score
         emptyVals[0] += currentGame.state.getEmpty()
-        maxVals[0] += currentGame.state.getMax()
+        maxVals[0] += currentGame.state.getMax()**2
 
         #right
         currentGame = deepcopy(env)
         currentGame.step(1)
         runRandom(currentGame)
-        scoresVals[1] += currentGame.state.getScore()
+        scoresVals[1] += currentGame.state.score
         emptyVals[1] += currentGame.state.getEmpty()
-        maxVals[1] += currentGame.state.getMax()
+        maxVals[1] += currentGame.state.getMax()**2
 
         #up
         currentGame = deepcopy(env)
         currentGame.step(2)
         runRandom(currentGame)
-        scoresVals[2] += currentGame.state.getScore()
+        scoresVals[2] += currentGame.state.score
         emptyVals[2] += currentGame.state.getEmpty()
-        maxVals[2] += currentGame.state.getMax()
+        maxVals[2] += currentGame.state.getMax()**2
 
         #down
         currentGame = deepcopy(env)
         currentGame.step(3)
         runRandom(currentGame)
-        scoresVals[3] += currentGame.state.getScore()
+        scoresVals[3] += currentGame.state.score
         emptyVals[3] += currentGame.state.getEmpty()
         maxVals[3] += currentGame.state.getMax()**2
-    qualityLeft = ((scoresVals[0] + maxVals[0]) / iter) * checkNotIllegal(env, 0)
-    qualityRight = ((scoresVals[1] + maxVals[1]) / iter) * checkNotIllegal(env, 1)
-    qualityUp = ((scoresVals[2] + maxVals[2]) / iter) * checkNotIllegal(env, 2)
-    qualityDown = ((scoresVals[3] + maxVals[3]) / iter) * checkNotIllegal(env, 3)
+
+    qualityLeft = (maxVals[0]) * checkNotIllegal(env, 0)
+    qualityRight = (maxVals[1]) * checkNotIllegal(env, 1)
+    qualityUp = (maxVals[2]) * checkNotIllegal(env, 2)
+    qualityDown = (maxVals[3]) * checkNotIllegal(env, 3)
 
     qualities = [qualityLeft, qualityRight, qualityUp, qualityDown]
 
     print("\n")
-
     print(qualities)
 
     tmp = max(qualities)
@@ -78,15 +79,31 @@ def oneIteration():
 def checkNotIllegal(save, direction):
     copy = deepcopy(save)
     if copy.state.move(direction) == "illegal":
-        print("Illegal")
         return False
     return True
 
 
 if __name__ == "__main__":
-    env = MyGameEnv()
+
+    env.reset()
 
     while not env.state.gameOver():
         oneIteration()
         # print(env.state.score)
         # env.render()
+
+    print("Finished with a score of", env.state.score, "and a max tile size of", env.state.getMax()**2)
+    env.state.printArr()
+
+def runner(iterations = 10):
+    iter = iterations
+
+    env.reset()
+
+    while not env.state.gameOver():
+        oneIteration(env)
+
+    print("Finished with a score of", env.state.score, "and a max tile size of", env.state.getMax() ** 2)
+    # env.state.printArr()
+
+    return([env.state.getMax(), env.state.score])

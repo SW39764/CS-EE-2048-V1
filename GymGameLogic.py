@@ -34,7 +34,7 @@ class GameSave:
                 x = int(random.randint(0, 3))
                 y = int(random.randint(0, 3))
                 if self.board[x][y] == 0:
-                    self.board[x][y] = (random.choices([1, 2], weights=(4, 1)))[0]
+                    self.board[x][y] = (random.choices([1, 2], weights=(9, 1)))[0]
                     break
 
     def printArr(self):

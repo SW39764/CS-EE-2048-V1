@@ -1,7 +1,10 @@
+import random
+
 import gym
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import copy
 
 import absl.logging
 absl.logging.set_verbosity(absl.logging.ERROR)
@@ -31,7 +34,6 @@ def build_model(states, actions):
     model.add(layers.Conv2D(filters=16,kernel_size=4,padding="same",activation="relu", input_shape=(1,4,4)))
     model.add(layers.Conv2D(filters=32,kernel_size=3,padding="same",activation="relu"))
     model.add(layers.Conv2D(filters=32,kernel_size=2,padding="same",activation="relu"))
-
     model.add(layers.Flatten())
     model.add(layers.Dense(units=256, activation="relu"))
     model.add(layers.Dense(actions, activation='linear'))
@@ -50,9 +52,9 @@ def build_model(states, actions):
 states = env.observation_space.shape
 actions = env.action_space.n
 
-model = models.load_model('model')
+# model = models.load_model('model')
 # model = build_model(states, actions)
-print(model.summary())
+# print(model.summary())
 
 def build_agent(model, actions):
     # policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1., value_min=1., value_test=0.1, nb_steps=1000)
@@ -69,12 +71,44 @@ def build_agent(model, actions):
 # import visualkeras
 # visualkeras.layered_view(model, to_file='output.png')
 
-dqn = build_agent(model, actions)
-dqn.compile(tf.keras.optimizers.Adam(lr=0.005))
-dqn.fit(env, nb_steps=1000000, visualize=False, verbose=2)
+# dqn = build_agent(model, actions)
+# dqn.compile(tf.keras.optimizers.Adam(lr=0.005))
+# dqn.fit(env, nb_steps=100000, visualize=False, verbose=2)
 
-model.save('model')
+# model.save('model')
 
-plotMaxs()
+# plotMaxs()
 
 # _ = dqn.test(env, nb_episodes = 2, visualize= True)
+
+
+def runner():
+    runEnv = MyGameEnv()
+    runEnv.state.printArr()
+
+    model = models.load_model('model')
+
+
+    while not runEnv.state.gameOver():
+        # print("\nOne round")
+
+        temp = copy.deepcopy(runEnv.state)
+        predictions = model.predict(runEnv.state.board.reshape(1, 1, 4, 4))
+        best = np.argmax(predictions)
+        runEnv.step(best)
+        while temp.score == runEnv.state.score:
+            # print("New Try")
+            # print(predictions)
+            predictions = np.delete(predictions, best)
+            if predictions.size == 0:
+                break
+            best = np.argmax(predictions)
+            # print(predictions)
+            # print(best)
+            runEnv.step(best)
+            runEnv.state.printArr()
+        # print("Done with round")
+
+    print("Done")
+    runEnv.state.printArr()
+    return([runEnv.state.getMax(), runEnv.state.score])
